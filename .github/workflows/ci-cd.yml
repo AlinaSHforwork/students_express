@@ -102,7 +102,7 @@ jobs:
             cd /home/produser/students_express || exit 1
             
             printf "Pulling latest changes from prod branch...\n"
-            git pull origin prod
+            git pull origin master
             
             printf "Updating .env file...\n"
             cat << 'ENV' > .env
