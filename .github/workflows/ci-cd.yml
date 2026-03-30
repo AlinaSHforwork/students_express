@@ -92,7 +92,6 @@ jobs:
 
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=yes ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} \
             PORT=${{ secrets.PORT }} \
-            DATABASE_URL="${{ secrets.DB_URL }}" \
             SERVER_HOST=${{ secrets.SERVER_HOST }} \
             'bash -s' << 'EOF'
             set -euo pipefail
@@ -103,14 +102,6 @@ jobs:
             
             printf "Pulling latest changes from prod branch...\n"
             git pull origin master
-            
-            printf "Updating .env file...\n"
-            cat <<ENV > .env
-            PORT=$PORT
-            DATABASE_URL=$DATABASE_URL
-            NODE_ENV=production
-            ENV 
-            chmod 600 .env
             
             printf "Installing production dependencies...\n"
             npm ci --only=production
