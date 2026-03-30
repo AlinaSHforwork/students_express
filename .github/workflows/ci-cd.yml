@@ -105,7 +105,7 @@ jobs:
             git pull origin master
             
             printf "Updating .env file...\n"
-            cat << 'ENV' > .env
+            cat <<ENV > .env
             PORT=$PORT
             DATABASE_URL=$DATABASE_URL
             NODE_ENV=production
