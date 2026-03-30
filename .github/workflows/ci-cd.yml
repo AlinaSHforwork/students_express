@@ -72,7 +72,7 @@ jobs:
 
   deploy:
     needs: [validate-structure, build]
-    if: github.event_name == 'push' && github.repository == 'mp987-gt/students_express' && github.ref == 'refs/heads/prod'
+    if: github.event_name == 'push' && github.repository == 'AlinaSHforwork/students_express' && github.ref == 'refs/heads/test-prod'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
