@@ -1,9 +1,9 @@
 name: CI/CD
 on:
   push:
-    branches: [ master, prod ]
+    branches: [ master, prod, test-prod ]
   pull_request:
-    branches: [ master, prod ]
+    branches: [ master, prod, test-prod ]
 
 jobs:
   validate-structure:
