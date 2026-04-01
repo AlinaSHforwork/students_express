@@ -20,6 +20,7 @@ import streetFoodRouter from './routes/street_food.js'
 import heroessRouter from './routes/heroes.js'
 import presidentRouter from './routes/president.js'
 import productRouter from './routes/product.js'
+import batmanRouter from './routes/batman.js'
 
 import { fileURLToPath } from 'url';
 
@@ -53,6 +54,7 @@ app.use('/gym2', gymRouter);
 app.use('/dhd', dhdRouter);
 app.use('/street_food', streetFoodRouter);
 app.use('/product', productRouter);
+app.use('/villains', batmanRouter);
 
 // catch 404 and forward to error handler
 
