@@ -1,10 +1,11 @@
 import express from "express"
 const router = express.Router();
 import db from "../db/connector.js";
+import { registerHousewife, deleteHousewife, updateHousewife, checkPassword, checkReason, checkUsername, checkSeason} from "../controllers/dhdController.js";
 
 
 router.get('/', async function(req, res, next) {
-  const dhd = await db.query('SELECT * FROM desperate_housewives');
+  const dhd = await db.query('SELECT * FROM desperate_housewives_1');
 
   const modDhd = dhd.rows.map(w => {
     return {
@@ -16,50 +17,48 @@ router.get('/', async function(req, res, next) {
 });
 
 
-router.get('/addHousewife', async function(req, res, next) {
-  res.render('forms/dhd_form');
-})
+router.get('/addHousewife', function(req, res) {
+  res.render('forms/dhd/dhd_form', { 
+    username: '', season: '', reason: '', character_notes: '' 
+  });
+});
 
-router.post('/addHousewife', async function(req, res, next) {
+router.post('/addHousewife', async function(req, res) {
   console.log("Submitted data: ", req.body);
 
-  
+  // Оскільки у формі name="password_hash", дістаємо його ПРЯМО
+  const { username, password_hash, season, reason, character_notes } = req.body;
 
-const { username, season, reason, character_notes } = req.body;
-
-  async function addHousewife(username, season, reason, character_notes) {
-   try {
-      const query = `
-      INSERT INTO desperate_housewives (
-            username, season, reason, character_notes
-        )
-        VALUES ($1, $2, $3, $4) 
-        RETURNING *`;
-   const res = await db.query(query, [username, season, reason, character_notes]);
-
-   } catch (err) 
-      { console.error(err)
-        throw err;
-   }
-}
-
-try {
-    await addHousewife(username, season, reason, character_notes);
-    
+  try {
+    // Викликаємо функцію з контролера
+    await registerHousewife(username, password_hash, season, reason, character_notes);
     res.redirect('/dhd');
   } catch (err) {
-    res.status(500).send("Помилка при додаванні домогосподарки. Можливо, вона вже існує.");
+    console.error("Помилка реєстрації:", err.message);
+    res.status(500).render('forms/dhd/dhd_form', {
+      ErrorPassword: "Проблема з паролем або даними",
+      username, season, reason, character_notes 
+    });
   }
 });
 
-router.get("/delete/:id", async (req, res) => {
+
+router.get('/delete', async function(req, res, next) {
+  res.render('forms/dhd/dhd_delete');
+})
+
+router.post('/delete', async function(req, res, next) {
+  const { username, password } = req.body; 
+
   try {
-    const { id } = req.params;
-    await db.query("DELETE FROM desperate_housewives WHERE id = $1", [id]);
-    res.redirect("/dhd");
+    await deleteHousewife(username, password);
+    res.redirect('/dhd');
   } catch (err) {
-    console.error("Delete error:", err);
-    res.status(500).send("Could not delete gun");
+    if (err.message === 'Invalid password') {
+      res.status(403).send('Invalid password');
+    } else {
+      res.status(500).send(`!! Error deleting housewife: ${username}`);
+    }
   }
 });
 
