@@ -32,9 +32,9 @@ router.post('/addHousewife', async function(req, res) {
     await registerHousewife(username, password_hash, season, reason, character_notes);
     res.redirect('/dhd');
   } catch (err) {
-    console.error("Помилка реєстрації:", err.message);
+    console.error("Registration Error:", err.message);
     res.status(500).render('forms/dhd/dhd_form', {
-      ErrorPassword: "Проблема з паролем або даними",
+      ErrorPassword: "Wrong login or password",
       username, season, reason, character_notes 
     });
   }
@@ -70,7 +70,7 @@ router.get('/update/:id', async function(req, res) {
     const housewife = result.rows[0];
 
     if (!housewife) {
-      return res.status(404).send("Персонажа не знайдено");
+      return res.status(404).send("No Character");
     }
 
     res.render('forms/dhd/dhd_update', { 
@@ -99,11 +99,11 @@ router.post('/update/:id', async (req, res) => {
     res.redirect('/dhd');
   } catch (err) {
     if (err.message === 'Character not found') {
-      res.status(404).send('Помилка: Персонажа з таким ім’ям не знайдено');
+      res.status(404).send('Error: No character with this name');
     } else if (err.message === 'Invalid password') {
-      res.status(403).send('Помилка: Невірний пароль');
+      res.status(403).send('Wrong password');
     } else {
-      res.status(500).send('Помилка сервера при оновленні');
+      res.status(500).send('Server error');
     }
   }
 });
