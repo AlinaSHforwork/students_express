@@ -57,6 +57,17 @@ createTableQueries.push(`
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP    
    );
  
+
+
+
+
+
+
+
+
+
+
+
 createTableQueries.push(`
  CREATE TABLE IF NOT EXISTS games_info (
     id SERIAL PRIMARY KEY,
